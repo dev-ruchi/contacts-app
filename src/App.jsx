@@ -11,8 +11,19 @@ export default function App() {
   const [contactNumber, setContactNumber] = useState("")
 
 
+  function numberAlreadyExists() {
+    return contacts.findIndex(contact => contact.number === contactNumber) !== -1
+  }
+
+
   function addContacts(e) {
     e.preventDefault();
+
+    if (numberAlreadyExists()) {
+      alert("This number already exists");
+      return;
+    }
+
     setContacts([{ name: contactName, number: contactNumber }, ...contacts]);
     setContactName("");
     setContactNumber("");
@@ -43,27 +54,27 @@ export default function App() {
         <Button type="submit" variant="primary">Add</Button>
       </Form>
 
-    <h3 className='mt-5 mb-3'>My contacts</h3>
+      <h3 className='mt-5 mb-3'>My contacts</h3>
 
 
-      { contacts.length === 0 && <p>You do not have no contacts yet.</p> }
+      {contacts.length === 0 && <p>You do not have no contacts yet.</p>}
 
       <ListGroup className="mt-10">
         {
           contacts.map(contact => {
             return (
-                <ListGroup.Item
-                  key={contact.number}
-                  as="li"
-                  className="d-flex justify-content-between align-items-start">
-                  <div className="ms-2 me-auto">
-                    <div className="fw-bold">{contact.name}</div>
-                    {contact.number}
-                  </div>
-                  <Badge bg="danger" pill onClick={() => { deleteContact(contact) }}>
-                    Delete
-                  </Badge>
-                </ListGroup.Item>
+              <ListGroup.Item
+                key={contact.number}
+                as="li"
+                className="d-flex justify-content-between align-items-start">
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">{contact.name}</div>
+                  {contact.number}
+                </div>
+                <Badge bg="danger" pill onClick={() => { deleteContact(contact) }}>
+                  Delete
+                </Badge>
+              </ListGroup.Item>
 
             )
           })
