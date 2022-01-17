@@ -6,7 +6,7 @@ import './index.css'
 
 export default function App() {
 
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(loadContacts());
   const [contactName, setContactName] = useState("");
   const [contactNumber, setContactNumber] = useState("")
 
@@ -24,17 +24,38 @@ export default function App() {
       return;
     }
 
-    setContacts([{ name: contactName, number: contactNumber }, ...contacts]);
+    const updatedContacts = [{ name: contactName, number: contactNumber }, ...contacts];
+
+    setContacts(updatedContacts);
     setContactName("");
     setContactNumber("");
 
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
   }
+
+function loadContacts() {
+  let savedContacts = [];
+  
+  try {
+    savedContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+  } catch (err) {
+    savedContacts = [];
+    console.log(err);
+  }
+  return savedContacts;
+}
+
 
   function deleteContact(contact) {
     if (!confirm("Do you really want to delete this contact")) {
       return;
     }
     setContacts(contacts.filter(contactItem => contact.number !== contactItem.number))
+
+    const updatedContacts = contacts.filter(contactItem => contact.number !== contactItem.number)
+
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+
   }
 
   return (
